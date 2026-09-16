@@ -1,0 +1,61 @@
+Indian Evidence Act - Key Sections
+
+Section 3 - Definition of "evidence"
+"Evidence" includes all documents produced for the inspection of the Court, and
+all statements which the Court permits or requires to be made before it by
+witnesses, in the manner provided by law.
+
+Section 5 - Relevance of facts which are the occasion, cause, or effect of
+relevant facts
+Facts which are the occasion, cause, or effect of relevant facts, or which
+afford an opportunity for the commission of a relevant fact, shall be relevant.
+
+Section 8 - Motive, preparation, and previous or subsequent conduct
+Any fact which shows or constitutes a motive or preparation for any fact in
+issue or relevant fact, or which constitutes the conduct of any person whose
+conduct is relevant, shall be relevant.
+
+Section 15 - Facts relevant when there is series of similar transactions
+When there is a series of similar transactions involving the same parties,
+all such transactions are relevant.
+
+Section 17 - Statements made by parties to suit
+The facts, when relevant, which constitute the statement of any party to the
+suit, or of any agent to any party to the suit, regarding any matter in
+dispute in the suit, are relevant.
+
+Section 32 - Statements made by persons who cannot be called as witnesses
+Statements made by a person as to the cause of his death, or as to any of the
+circumstances of the transaction which produced his death, are relevant when
+the question is as to the cause of his death.
+
+Section 45 - Opinions of experts as to the points of law
+When the question is one of foreign law, or of science, or of art, or of
+identity of handwriting or finger prints, the opinions upon such points of
+experts are relevant.
+
+Section 45A - Opinion of electronic forensic expert
+In matters involving electronic evidence, the opinion of an expert in computer
+science or digital forensics is relevant.
+
+Section 65B - Admissibility of electronic records
+Any information contained in an electronic record which is printed on a paper,
+or stored, recorded or copied in any machine-readable form for the purposes of
+proof of such contents, is deemed to be a document and is admissible without
+proof or production of the original.
+
+Section 112 - Presumption as to legitimacy of birth
+The fact that any person was born during the continuance of a valid marriage
+between his mother and any man, or within two hundred days after the dissolution
+of the marriage, is a relevant fact.
+
+Section 113 - Presumption as to dowry death
+If the woman married after 19th May 1984, and her death is caused by any
+burns or bodily injury, or occurs under other abnormal circumstances within
+seven years of her marriage, the Court shall presume that her death was
+caused by her husband or his relatives.
+
+Section 114 - Presumptions as to certain facts
+The Court may presume the existence of any fact which it thinks likely to
+have happened, regard being to the common course of natural events, human
+conduct and public and private business relations.

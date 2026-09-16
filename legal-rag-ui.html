@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LegalRAG | AI Legal Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #FAF8F3;
+      --color-bg-subtle: #F0EDE6;
+      --color-text: #1F2420;
+      --color-text-muted: #6B7280;
+      --color-accent: #7C2D1D;
+      --color-accent-hover: #9A3B29;
+      --color-border: #E5E7EB;
+      --font-serif: 'Noto Serif', serif;
+      --font-sans: 'Noto Sans', sans-serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-bg: #1F2420;
+        --color-bg-subtle: #2D3530;
+        --color-text: #FAF8F3;
+        --color-text-muted: #9CA3AF;
+        --color-accent: #9A3B29;
+        --color-accent-hover: #7C2D1D;
+        --color-border: #374151;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-bg: #1F2420;
+      --color-bg-subtle: #2D3530;
+      --color-text: #FAF8F3;
+      --color-text-muted: #9CA3AF;
+      --color-accent: #9A3B29;
+      --color-accent-hover: #7C2D1D;
+      --color-border: #374151;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .font-serif {
+      font-family: var(--font-serif);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--color-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo-text {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-link {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--color-accent);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--color-bg-subtle);
+    }
+
+    /* Disclaimer Banner */
+    .disclaimer {
+      background: var(--color-bg-subtle);
+      border-bottom: 1px solid var(--color-border);
+      padding: 12px 0;
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+
+    .disclaimer strong {
+      color: var(--color-accent);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--color-text);
+    }
+
+    .hero-title span {
+      color: var(--color-accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--color-text-muted);
+      max-width: 700px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    /* Input Section */
+    .input-section {
+      background: var(--color-bg-subtle);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .input-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 160px;
+      padding: 20px;
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: 16px;
+      font-size: 16px;
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 4px rgba(124, 45, 29, 0.1);
+    }
+
+    .dropzone {
+      border: 2px dashed var(--color-border);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dropzone:hover {
+      border-color: var(--color-accent);
+      background: rgba(124, 45, 29, 0.05);
+    }
+
+    .dropzone-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .dropzone p {
+      color: var(--color-text-muted);
+      margin-bottom: 8px;
+    }
+
+    .dropzone span {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    .input-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 8px;
+      background: var(--color-bg);
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .lang-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .submit-btn {
+      background: var(--color-accent);
+      color: white;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Results Section */
+    .results-section {
+      margin-bottom: 60px;
+    }
+
+    .result-card {
+      background: var(--color-bg-subtle);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+
+    .result-section-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--color-text);
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 16px;
+    }
+
+    .result-content {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    .citation-chip {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(124, 45, 29, 0.1);
+      color: var(--color-accent);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 4px 8px 4px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .citation-chip:hover {
+      background: rgba(124, 45, 29, 0.2);
+    }
+
+    .confidence-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .confidence-high { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+    .confidence-medium { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+    .confidence-low { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+    .confidence-error { background: rgba(156, 163, 175, 0.1); color: #6B7280; }
+
+    /* Disclaimer */
+    .legal-disclaimer {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+
+    .legal-disclaimer h4 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--color-accent);
+    }
+
+    .legal-disclaimer p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-bg-subtle);
+      border-top: 1px solid var(--color-border);
+      padding: 48px 0 24px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }
+
+    .footer-col p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--color-accent);
+    }
+
+    .footer-bottom {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copyright {
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .input-section {
+        padding: 24px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* Loading animation */
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      animation: typing 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-content">
+      <div class="logo">
+        <div class="logo-icon">⚖️</div>
+        <div class="logo-text">LegalRAG</div>
+      </div>
+      <nav class="nav-links">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#analyze" class="nav-link">Analyze</a>
+        <a href="#cases" class="nav-link">My Cases</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+    </div>
+  </header>
+
+  <!-- Disclaimer Banner -->
+  <div class="disclaimer">
+    <div class="container">
+      <strong>AI Legal Research Tool:</strong> This is an automated legal research assistant for informational purposes only. It does not constitute legal advice. Consult a licensed advocate for binding legal guidance.
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <h1 class="hero-title">
+        AI-Powered <span>Legal Research</span><br>
+        For Indian Law
+      </h1>
+      <p class="hero-subtitle">
+        Get instant legal analysis grounded in Indian statutes. Upload case documents or describe your legal question, and our AI will retrieve relevant laws and provide structured analysis.
+      </p>
+    </div>
+  </section>
+
+  <!-- Analysis Section -->
+  <section class="container" id="analyze">
+    <div class="input-section">
+      <h2 class="input-title">Describe Your Legal Question</h2>
+      <div class="input-group">
+        <textarea
+          class="text-input"
+          id="legalQuery"
+          placeholder="Describe your legal situation or question. For example: 'My employer has not paid my salary for 3 months. What are my rights under Indian law?'"
+        ></textarea>
+
+        <div class="dropzone" id="fileDropzone">
+          <div class="dropzone-icon">📄</div>
+          <p>Drag & drop PDF, DOCX, or image files</p>
+          <span>or click to upload</span>
+          <input type="file" id="fileInput" hidden multiple accept=".pdf,.docx,.png,.jpg,.jpeg">
+        </div>
+
+        <div class="input-actions">
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="hi">हिंदी</button>
+            <button class="lang-btn" data-lang="kn">ಕನ್ನಡ</button>
+          </div>
+          <button class="submit-btn" id="analyzeBtn">
+            Analyze Legal Issue
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section (hidden by default) -->
+    <div class="results-section" id="resultsSection" style="display: none;">
+      <h2 class="input-title" style="margin-bottom: 24px;">Analysis Results</h2>
+
+      <div class="result-card">
+        <h3 class="result-section-title">Facts Summary</h3>
+        <div class="result-content" id="factsSummary">
+          <!-- Facts summary will appear here -->
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h3 class="result-section-title">Applicable Laws</h3>
+        <div class="result-content" id="applicableLaws">
+          <!-- Applicable laws will appear here -->
+          <p class="text-body" style="color: var(--color-text-muted);">Loading legal research...</p>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h3 class="result-section-title">Legal Analysis</h3>
+        <div class="result-content" id="legalAnalysis">
+          <!-- Full analysis will appear here -->
+          <p class="text-body" style="color: var(--color-text-muted);">Loading analysis...</p>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h3 class="result-section-title">Strengths & Weaknesses</h3>
+        <div class="result-content">
+          <div id="strengths" style="margin-bottom: 16px;">
+            <strong>Strengths:</strong>
+            <p class="text-body" style="color: var(--color-text-muted);">Loading...</p>
+          </div>
+          <div id="weaknesses">
+            <strong>Weaknesses:</strong>
+            <p class="text-body" style="color: var(--color-text-muted);">Loading...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h3 class="result-section-title">Confidence Assessment</h3>
+        <div class="result-content">
+          <span class="confidence-badge confidence-medium" id="confidenceBadge">Confidence: MEDIUM</span>
+          <p class="text-body" style="color: var(--color-text-muted); margin-top: 16px;">
+            This assessment is based on the statutes available in our knowledge base. For comprehensive legal advice, consult a licensed advocate.
+          </p>
+        </div>
+      </div>
+
+      <div class="legal-disclaimer">
+        <h4>Legal Disclaimer</h4>
+        <p>
+          This AI-generated legal analysis is for informational purposes only and does not constitute legal advice.
+          The analysis is based solely on the statutes in our limited knowledge base and may not include all
+          relevant laws or recent judicial decisions. Always consult a licensed advocate before making any legal
+          decisions. Do not rely on this analysis for court proceedings or official matters.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="about">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo" style="margin-bottom: 20px;">
+            <div class="logo-icon">⚖️</div>
+            <div class="logo-text">LegalRAG</div>
+          </div>
+          <p>
+            AI-powered legal research platform for Indian law. Providing accessible legal analysis
+            grounded in statutes and case law.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Indian Constitution</a></li>
+            <li><a href="#">IPC Sections</a></li>
+            <li><a href="#">Evidence Act</a></li>
+            <li><a href="#">Legal Glossary</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>LegalRAG</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2026 LegalRAG. All rights reserved.</p>
+        <p class="footer-copyright">Powered by Groq API + Local Multilingual Embeddings</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 Dark';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ Light';
+      }
+    });
+
+    // Language selector
+    const langButtons = document.querySelectorAll('.lang-btn');
+    let selectedLanguage = 'en';
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        langButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedLanguage = btn.dataset.lang;
+      });
+    });
+
+    // File upload
+    const dropzone = document.getElementById('fileDropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--color-accent)';
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = 'var(--color-border)';
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--color-border)';
+      if (e.dataTransfer.files.length > 0) {
+        // Handle file upload
+        alert(`Selected files: ${Array.from(e.dataTransfer.files).map(f => f.name).join(', ')}`);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        // Handle file upload
+        alert(`Selected: ${Array.from(e.target.files).map(f => f.name).join(', ')}`);
+      }
+    });
+
+    // Analysis button
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const legalQuery = document.getElementById('legalQuery');
+    const resultsSection = document.getElementById('resultsSection');
+
+    analyzeBtn.addEventListener('click', async () => {
+      const query = legalQuery.value.trim();
+
+      if (!query) {
+        alert('Please describe your legal question first.');
+        return;
+      }
+
+      // Show loading state
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = 'Analyzing...';
+
+      // Simulate loading
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Display sample results (in production, this would call the API)
+      document.getElementById('factsSummary').innerHTML = `
+        <p>The user has raised a legal question regarding employment law and unpaid wages in India.</p>
+        <p>Key issue: Employer non-payment of salaries for an extended period.</p>
+        <p>Relevant legal framework would include the Payment of Wages Act, 1936, and relevant IPC sections.</p>
+      `;
+
+      document.getElementById('applicableLaws').innerHTML = `
+        <div class="citation-chip" onclick="showSource('Section 3, Payment of Wages Act')">Section 3 - Timing of wage payments</div>
+        <div class="citation-chip" onclick="showSource('Section 5, Payment of Wages Act')">Section 5 - Deductions from wages</div>
+        <div class="citation-chip" onclick="showSource('Section 7, Payment of Wages Act')">Section 7 - Authorities under the Act</div>
+        <p style="margin-top: 16px; color: var(--color-text-muted);">Cited statutes from our knowledge base. Click a chip to view the full text.</p>
+      `;
+
+      document.getElementById('legalAnalysis').innerHTML = `
+        <p><strong>Legal Analysis:</strong></p>
+        <p>Under the Payment of Wages Act, 1936, Section 3 mandates that wages be paid on time. Failure to do so constitutes a technical offense under Section 5 regarding unauthorized deductions.</p>
+        <p>Additionally, if the non-payment is willful and malicious, it may constitute criminal breach of trust under Section 409 of the IPC, though civil remedies are typically pursued first.</p>
+        <p>The employee has the right to file a complaint with the Paying Authority under Section 15 of the Act, seeking recovery of unpaid wages with compensation.</p>
+        <p><strong>Recommendation:</strong> File a formal complaint with the concerned Labour Commissioner within 6 months of the wage due date.</p>
+      `;
+
+      document.getElementById('strengths').innerHTML = `
+        <ul>
+          <li>Clear statutory framework under Payment of Wages Act</li>
+          <li>Time-bound remedy available under Section 15</li>
+          <li>Presumption in favor of employee for recent non-payment</li>
+        </ul>
+      `;
+
+      document.getElementById('weaknesses').innerHTML = `
+        <ul>
+          <li>May require proof of employment relationship</li>
+          <li>Statute of limitations (6 months for complaint filing)</li>
+          <li>Remedy is civil, not criminal (unless fraud proven)</li>
+        </ul>
+      `;
+
+      document.getElementById('confidenceBadge').className = 'confidence-badge confidence-high';
+      document.getElementById('confidenceBadge').textContent = 'Confidence: HIGH';
+
+      resultsSection.style.display = 'block';
+
+      // Scroll to results
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = 'Analyze Legal Issue';
+    });
+
+    function showSource(text) {
+      alert('Source text would be displayed here:\n\n' + text);
+    }
+
+    // Initialize with sample data
+    document.getElementById('legalQuery').value = 'My employer has not paid my salary for 3 months. What are my rights under Indian law?';
+  </script>
+</body>
+</html>
