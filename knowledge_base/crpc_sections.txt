@@ -1,0 +1,28 @@
+Code of Criminal Procedure (CrPC) - Key Procedural Sections
+
+Section 41 - When police may arrest without warrant
+(1) Any police officer may without an order from a Magistrate and without a warrant, arrest any person who has been concerned in any cognizable offence, or against whom a reasonable complaint has been made, or credible information has been received, or a reasonable suspicion exists.
+
+Section 41A - Notice of appearance before police officer
+(1) The police officer shall, in all cases where the arrest of a person is not required under sub-section (1) of section 41, issue a notice directing the person against whom a reasonable complaint has been made to appear before him.
+
+Section 57 - Person arrested not to be detained more than twenty-four hours
+No police officer shall detain in custody a person arrested without warrant for a longer period than under all the circumstances of the case is reasonable, and such period shall not exceed twenty-four hours exclusive of the time necessary for the journey from the place of arrest to the Magistrate's Court.
+
+Section 154 - Information in cognizable cases (First Information Report / FIR)
+(1) Every information relating to the commission of a cognizable offence, if given orally to an officer in charge of a police station, shall be reduced to writing by him or under his direction, and be read over to the informant; and every such information shall be signed by the person giving it, and the substance thereof shall be entered in a book to be kept by such officer in such form as the State Government may prescribe.
+
+Section 167 - Procedure when investigation cannot be completed in twenty-four hours (Remand)
+Whenever any person is arrested and detained in custody, and it appears that the investigation cannot be completed within the period of twenty-four hours fixed by section 57, the officer in charge of the police station shall transmit to the nearest Judicial Magistrate a copy of the entries in the diary, and shall at the same time forward the accused to such Magistrate.
+
+Section 436 - In what cases bail to be taken (Bailable offences)
+When any person other than a person accused of a non-bailable offence is arrested or detained without warrant by an officer in charge of a police station, or appears or is brought before a Court, and is prepared at any time while in the custody of such officer or at any stage of the proceeding before such Court to give bail, such person shall be released on bail.
+
+Section 437 - When bail may be taken in case of non-bailable offence
+When any person accused of, or suspected of, the commission of any non-bailable offence is arrested or detained without warrant, he may be released on bail by a Court other than the High Court or Court of Session, subject to conditions specified by law.
+
+Section 438 - Direction for grant of bail to person apprehending arrest (Anticipatory Bail)
+Where any person has reason to believe that he may be arrested on accusation of having committed a non-bailable offence, he may apply to the High Court or the Court of Session for a direction under this section that in the event of such arrest he shall be released on bail.
+
+Section 482 - Saving of inherent powers of High Court
+Nothing in this Code shall be deemed to limit or affect the inherent powers of the High Court to make such orders as may be necessary to give effect to any order under this Code, or to prevent abuse of the process of any Court or otherwise to secure the ends of justice.

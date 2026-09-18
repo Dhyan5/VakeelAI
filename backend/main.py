@@ -1,211 +1,268 @@
 """
-FastAPI backend for the Legal RAG platform.
-
-Endpoints:
-- POST /api/auth/register - Register a new user
-- POST /api/auth/login - Login and get JWT token
-- POST /api/case/analyze - Analyze a legal case
-- GET /api/case/list - List user's cases
-- GET /api/case/{id} - Get a specific case
-- DELETE /api/case/{id} - Delete a case
-
-Uses SQLite for user/case storage and NumPy for RAG index.
+FastAPI application for VakeelAI Legal RAG Platform.
+Production endpoints:
+- POST /api/case/submit        Submit plain text case description
+- POST /api/case/upload        Upload PDF / DOCX / Scanned image
+- POST /api/case/analyze       Run full RAG analysis
+- GET  /api/case/stream        Stream real-time analysis tokens
+- GET  /api/case/history       List case history for current user
+- GET  /api/case/{case_id}     Retrieve case details
+- DELETE /api/case/{case_id}   Delete case from history
+- POST /api/auth/register      Register new account
+- POST /api/auth/login         Login and acquire JWT
+- GET  /api/health             Health check endpoint
 """
 
 import os
-from typing import List, Dict, Any, Optional
+from typing import Optional, List
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-import jwt
-
 import dotenv
 
 dotenv.load_dotenv()
 
-from db import (
-    init_db, create_user, authenticate_user, create_case,
-    get_user_cases, get_case, delete_case, update_case_analysis
+from .db import (
+    init_db, create_user, authenticate_user,
+    save_case_history, get_user_cases, get_case_by_id, delete_user_case
 )
-from rag_service import get_rag_service
-from generation import get_generation_service
+from .auth import create_access_token, get_current_user, get_current_user_optional
+from .rag_service import get_rag_service
 
 
-# Initialize DB
-init_db()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan handler: initialize DB and verify RAG index on startup."""
+    init_db()
+    # Initialize RAG service and auto-rebuild index if missing
+    try:
+        service = get_rag_service()
+        print(f"[FastAPI] VakeelAI backend initialized. Indexed chunks: {len(service.retrieval_engine)}")
+    except Exception as e:
+        print(f"[FastAPI] Warning initializing RAG service: {e}")
+    yield
 
-# FastAPI app
-app = FastAPI(title="LegalRAG API", version="1.0.0")
 
-# CORS middleware
+app = FastAPI(
+    title="VakeelAI Legal RAG API",
+    description="Multilingual Legal Research & Analysis Assistant for Indian Law (Kannada, Hindi, English)",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# CORS Configuration
+# Allows localhost (dev) and deployed Vercel frontend domains
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "*")
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
+if FRONTEND_ORIGIN and FRONTEND_ORIGIN != "*":
+    allowed_origins.append(FRONTEND_ORIGIN)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"] if FRONTEND_ORIGIN == "*" else allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# Pydantic models
-class UserRegister(BaseModel):
+# Request & Response Models
+class CaseSubmitRequest(BaseModel):
+    query: str
+    output_language: Optional[str] = "English"
+
+
+class UserRegisterRequest(BaseModel):
     username: str
     email: str
     password: str
 
 
-class UserLogin(BaseModel):
+class UserLoginRequest(BaseModel):
     username: str
     password: str
 
 
-class CaseAnalyze(BaseModel):
-    query: str
-    output_language: str = "English"
-    file_content: Optional[str] = None
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
-# JWT settings
-SECRET_KEY = os.getenv("JWT_SECRET", "default-secret-change-in-production")
-ALGORITHM = "HS256"
-
-
-def create_jwt_token(username: str) -> str:
-    """Create a JWT token for a user."""
-    return jwt.encode({"sub": username}, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def verify_token(authorization: str = Header(None)) -> str:
-    """Verify JWT token and return username."""
-    if not authorization:
-        raise HTTPException(status_code=401, detail="Missing authorization header")
-
-    try:
-        if authorization.startswith("Bearer "):
-            token = authorization[7:]
-        else:
-            token = authorization
-
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload.get("sub", "")
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-# Auth endpoints
+# Auth Endpoints
 @app.post("/api/auth/register")
-async def register(user: UserRegister):
+async def register(req: UserRegisterRequest):
     """Register a new user."""
-    if not user.username or not user.password:
-        raise HTTPException(status_code=400, detail="Username and password required")
+    if not req.username or not req.password:
+        raise HTTPException(status_code=400, detail="Username and password are required.")
+    user = create_user(req.username, req.email, req.password)
+    if not user:
+        raise HTTPException(status_code=409, detail="Username or email already registered.")
 
-    result = create_user(user.username, user.email, user.password)
-    if not result:
-        raise HTTPException(status_code=409, detail="User already exists")
-
-    return result
+    token = create_access_token(user["id"], user["username"])
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {"id": user["id"], "username": user["username"], "email": user["email"]}
+    }
 
 
 @app.post("/api/auth/login")
-async def login(user: UserLogin):
-    """Login and return JWT token."""
-    if not user.username or not user.password:
-        raise HTTPException(status_code=400, detail="Username and password required")
+async def login(req: UserLoginRequest):
+    """Login and receive JWT."""
+    user = authenticate_user(req.username, req.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid username or password.")
 
-    user_info = authenticate_user(user.username, user.password)
-    if not user_info:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    token = create_jwt_token(user_info["username"])
-    return {"access_token": token, "token_type": "bearer"}
-
-
-# Case endpoints
-@app.get("/api/case/list")
-async def list_cases(current_user: str = Depends(verify_token)):
-    """List user's cases."""
-    # In a real app, we'd look up user_id from JWT
-    # For now, we use a simple mapping
-    return get_user_cases(user_id=1)  # Default to user_id=1
+    token = create_access_token(user["id"], user["username"])
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user
+    }
 
 
-@app.post("/api/case/analyze")
-async def analyze_case(
-    case: CaseAnalyze,
-    current_user: str = Depends(verify_token)
+# Case Ingestion & Analysis Endpoints
+@app.post("/api/case/submit")
+async def submit_case_text(
+    req: CaseSubmitRequest,
+    current_user: dict = Depends(get_current_user_optional)
 ):
-    """Analyze a legal case."""
-    # Get RAG service
-    rag_service = get_rag_service()
-    if not rag_service:
-        raise HTTPException(
-            status_code=503,
-            detail="RAG service not initialized. Check GROQ_API_KEY."
-        )
-
-    # Get or create case
-    title = case.query[:50] + "..." if len(case.query) > 50 else case.query
-
-    # Create case record
-    case_data = create_case(
-        user_id=1,  # Default user
-        title=title,
-        content_type="text",
-        content=case.query if not case.file_content else case.file_content,
-        language=case.output_language
+    """Submit a text case and receive structured legal analysis."""
+    rag = get_rag_service()
+    result = rag.analyze_case(
+        user_query=req.query,
+        output_language=req.output_language
     )
 
-    # Run analysis
-    result = rag_service.analyze_case(
-        user_query=case.query,
-        output_language=case.output_language
+    # Save to user history
+    uid = current_user.get("user_id", 1)
+    title = req.query.strip().split("\n")[0][:60]
+    saved = save_case_history(
+        user_id=uid,
+        title=title or "Legal Inquiry",
+        source_type="text",
+        analysis_text=result.get("analysis", ""),
+        query_preview=req.query,
+        detected_language=result.get("detected_language", "en"),
+        output_language=result.get("output_language", "English"),
+        citations=result.get("citations", []),
+        confidence=result.get("confidence", "HIGH")
     )
-
-    # Update case with analysis
-    update_case_analysis(case_data["id"], result["analysis"])
-
-    # Remove raw_response from output
-    output = {k: v for k, v in result.items() if k != "raw_response"}
-    output["case_id"] = case_data["id"]
-
-    return output
-
-
-@app.get("/api/case/{case_id}")
-async def get_case_detail(
-    case_id: int,
-    current_user: str = Depends(verify_token)
-):
-    """Get a specific case."""
-    result = get_case(user_id=1, case_id=case_id)
-    if not result:
-        raise HTTPException(status_code=404, detail="Case not found")
+    result["case_id"] = saved["id"]
     return result
 
 
-@app.delete("/api/case/{case_id}")
-async def delete_case_endpoint(
-    case_id: int,
-    current_user: str = Depends(verify_token)
+@app.post("/api/case/upload")
+async def upload_case_file(
+    file: UploadFile = File(...),
+    output_language: str = Form("English"),
+    current_user: dict = Depends(get_current_user_optional)
 ):
-    """Delete a case."""
-    if not delete_case(user_id=1, case_id=case_id):
-        raise HTTPException(status_code=404, detail="Case not found")
-    return {"message": "Case deleted"}
+    """Upload a case document (.pdf, .docx, .png, .jpg, .txt) and analyze."""
+    # Validate extension
+    allowed_exts = {".pdf", ".docx", ".doc", ".txt", ".png", ".jpg", ".jpeg"}
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in allowed_exts:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type '{ext}'. Allowed: PDF, DOCX, TXT, PNG, JPG."
+        )
+
+    # Read into memory (discarded after analysis per DPDP minimization)
+    content = await file.read()
+    rag = get_rag_service()
+
+    result = rag.analyze_document(
+        file_bytes=content,
+        filename=file.filename,
+        output_language=output_language
+    )
+
+    # Save to history
+    uid = current_user.get("user_id", 1)
+    title = f"Document: {file.filename}"
+    saved = save_case_history(
+        user_id=uid,
+        title=title,
+        source_type="file",
+        original_filename=file.filename,
+        analysis_text=result.get("analysis", ""),
+        query_preview=result.get("extracted_text_preview", ""),
+        detected_language=result.get("detected_language", "en"),
+        output_language=result.get("output_language", "English"),
+        citations=result.get("citations", []),
+        confidence=result.get("confidence", "HIGH")
+    )
+    result["case_id"] = saved["id"]
+    return result
 
 
+@app.post("/api/case/analyze")
+async def analyze_case_generic(
+    req: CaseSubmitRequest,
+    current_user: dict = Depends(get_current_user_optional)
+):
+    """Endpoint for direct analysis queries."""
+    return await submit_case_text(req, current_user)
+
+
+@app.get("/api/case/stream")
+async def stream_analysis_endpoint(
+    query: str = Query(...),
+    output_language: str = Query("English")
+):
+    """Server-Sent Event streaming endpoint for progressive text generation."""
+    rag = get_rag_service()
+
+    def event_stream():
+        for chunk in rag.stream_analysis(query, output_language=output_language):
+            yield f"data: {chunk}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+
+# Case History Endpoints
+@app.get("/api/case/history")
+@app.get("/api/case/list")
+async def list_cases(current_user: dict = Depends(get_current_user)):
+    """Retrieve case history for the authenticated user."""
+    uid = current_user.get("user_id", 1)
+    return get_user_cases(user_id=uid)
+
+
+@app.get("/api/case/{case_id}")
+async def get_case_detail(case_id: int, current_user: dict = Depends(get_current_user)):
+    """Retrieve specific case record by ID."""
+    uid = current_user.get("user_id", 1)
+    case_record = get_case_by_id(case_id=case_id, user_id=uid)
+    if not case_record:
+        raise HTTPException(status_code=404, detail="Case record not found.")
+    return case_record
+
+
+@app.delete("/api/case/{case_id}")
+async def delete_case(case_id: int, current_user: dict = Depends(get_current_user)):
+    """Delete case record permanently from history."""
+    uid = current_user.get("user_id", 1)
+    success = delete_user_case(case_id=case_id, user_id=uid)
+    if not success:
+        raise HTTPException(status_code=404, detail="Case record not found or unauthorized.")
+    return {"message": "Case data deleted successfully.", "case_id": case_id}
+
+
+# Health Check
 @app.get("/api/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "ok", "service": "LegalRAG"}
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    rag = get_rag_service()
+    return {
+        "status": "ok",
+        "service": "VakeelAI Legal RAG",
+        "indexed_chunks": len(rag.retrieval_engine),
+        "groq_configured": bool(rag.generation_service.client),
+        "languages_supported": ["en", "hi", "kn"]
+    }
