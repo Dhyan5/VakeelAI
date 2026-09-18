@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import LegalRAGWorkspace from './components/LegalRAGWorkspace';
-import CaseAnalyzerWorkspace from './components/CaseAnalyzerWorkspace';
-import StatuteExplorer from './components/StatuteExplorer';
-import DraftingAssistant from './components/DraftingAssistant';
-import CitationInspector from './components/CitationInspector';
+import Navbar from './components/Navbar';
+import SidebarDrawer from './components/SidebarDrawer';
+import ChatCopilot from './components/ChatCopilot';
+import CitationDrawer from './components/CitationDrawer';
+import DocAnalyzer from './components/DocAnalyzer';
+import StatuteVault from './components/StatuteVault';
+import DraftStudio from './components/DraftStudio';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('rag');
+  const [activeTab, setActiveTab] = useState('chat');
   const [language, setLanguage] = useState('en');
-  const [selectedQuery, setSelectedQuery] = useState('');
-  const [selectedCitations, setSelectedCitations] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeCitation, setActiveCitation] = useState(null);
+  const [prefillQuery, setPrefillQuery] = useState('');
   const [apiConnected, setApiConnected] = useState(true);
   const [indexedChunksCount, setIndexedChunksCount] = useState(39);
 
-  // Poll backend health endpoint
   useEffect(() => {
     const checkHealth = async () => {
       try {
@@ -23,9 +23,7 @@ export default function App() {
         if (res.ok) {
           const data = await res.json();
           setApiConnected(true);
-          if (data.indexed_chunks) {
-            setIndexedChunksCount(data.indexed_chunks);
-          }
+          if (data.indexed_chunks) setIndexedChunksCount(data.indexed_chunks);
         } else {
           setApiConnected(false);
         }
@@ -40,65 +38,64 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-[#070A12] text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200 relative">
       
-      {/* Top Header Navbar */}
-      <Header
+      {/* Top Navbar */}
+      <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         language={language}
         setLanguage={setLanguage}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
         apiConnected={apiConnected}
-        indexedChunksCount={indexedChunksCount}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 flex flex-col lg:flex-row gap-5 overflow-hidden">
-        
-        {/* Left Sidebar */}
-        <Sidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          indexedChunksCount={indexedChunksCount}
-          onSelectQuery={(query) => {
-            setSelectedQuery(query);
-            setActiveTab('rag');
-          }}
-        />
+      {/* Collapsible Left Sidebar Drawer */}
+      <SidebarDrawer
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        indexedChunksCount={indexedChunksCount}
+        onSelectPrompt={(promptText) => {
+          setPrefillQuery(promptText);
+          setActiveTab('chat');
+        }}
+        onNewChat={() => {
+          setPrefillQuery('');
+          setActiveTab('chat');
+          setSidebarOpen(false);
+        }}
+      />
 
-        {/* Center Main Workspace */}
-        {activeTab === 'rag' && (
-          <LegalRAGWorkspace
-            selectedQuery={selectedQuery}
+      {/* Main Workspace Area */}
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        {activeTab === 'chat' && (
+          <ChatCopilot
             language={language}
+            prefillQuery={prefillQuery}
             apiConnected={apiConnected}
-            onSelectCitation={(citations) => setSelectedCitations(citations)}
+            onOpenCitation={(citation) => setActiveCitation(citation)}
           />
         )}
 
         {activeTab === 'analyzer' && (
-          <CaseAnalyzerWorkspace language={language} />
+          <DocAnalyzer language={language} />
         )}
 
-        {activeTab === 'explorer' && (
-          <StatuteExplorer
-            onSelectCitation={(citations) => setSelectedCitations(citations)}
-          />
+        {activeTab === 'statutes' && (
+          <StatuteVault onOpenCitation={(citation) => setActiveCitation(citation)} />
         )}
 
         {activeTab === 'drafting' && (
-          <DraftingAssistant />
+          <DraftStudio />
         )}
-
-        {/* Right Citation Inspector (Visible in RAG or Explorer mode) */}
-        {(activeTab === 'rag' || activeTab === 'explorer') && (
-          <CitationInspector
-            citations={selectedCitations}
-            onClose={() => setSelectedCitations([])}
-          />
-        )}
-
       </main>
+
+      {/* Slide-Over Right Citation Drawer */}
+      <CitationDrawer
+        citation={activeCitation}
+        onClose={() => setActiveCitation(null)}
+      />
 
     </div>
   );
