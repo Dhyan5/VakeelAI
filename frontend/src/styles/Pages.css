@@ -1,0 +1,139 @@
+/* Nyaya – Knowledge Base page styles */
+
+.kb-page {
+  padding: 32px;
+  max-width: 960px;
+  margin: 0 auto;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.kb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.kb-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.kb-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upload-section {
+  margin-bottom: 32px;
+}
+
+.upload-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.upload-form .input-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.upload-progress {
+  margin-top: 16px;
+}
+
+.upload-progress-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.doc-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.doc-stat {
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.doc-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.doc-stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.doc-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Settings page */
+
+.settings-page {
+  padding: 32px;
+  max-width: 640px;
+  margin: 0 auto;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.settings-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.settings-section {
+  margin-bottom: 32px;
+}
+
+.settings-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-privacy {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  border: 1px solid var(--border);
+}
+
+.settings-privacy strong {
+  color: var(--text-primary);
+}
