@@ -1,0 +1,42 @@
+# Environments & secrets
+.env
+backend/.env
+*.env
+*.env.*
+!.env.example
+backend/.encryption_key
+data/.encryption_key
+
+# Databases & local data
+*.db
+*.sqlite3
+backend/data/
+data/
+chroma/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+backend/.venv/
+.venv/
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.npm
+*.log
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

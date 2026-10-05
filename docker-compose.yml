@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./knowledge_base:/app/knowledge_base
+      - nyaya_data:/app/data
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - FRONTEND_URL=http://localhost:5173
+      - DATA_DIR=/app/data
+      - CHROMA_DIR=/app/data/chroma
+      - SQLITE_DB=/app/data/nyaya.db
+      - UPLOAD_DIR=/app/data/uploads
+      - ENCRYPTION_KEY_FILE=/app/data/.encryption_key
+      - KNOWLEDGE_BASE_DIR=/app/knowledge_base
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  nyaya_data:
