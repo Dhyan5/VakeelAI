@@ -1,0 +1,28 @@
+THE BHARATIYA SAKSHYA ADHINIYAM, 2023
+(Act No. 47 of 2023)
+
+CHAPTER V: OF DOCUMENTARY EVIDENCE
+
+Section 57. Primary evidence.
+Primary evidence means the document itself produced for the inspection of the Court.
+
+Section 61. Admissibility of electronic records.
+Nothing in this Adhiniyam shall apply to deny the admissibility of an electronic or digital record in evidence on the ground that it is an electronic or digital record and such record shall have the same legal effect, validity and enforceability as other document.
+
+Section 63. Admissibility of electronic records (Certificate requirement).
+(1) Any information contained in an electronic record which is printed on paper, stored, recorded or copied in optical or magnetic media or cloud or semiconductor memory shall be deemed to be also a document.
+(4) In any proceedings where it is desired to give a statement in evidence by virtue of this section, a certificate doing any of the following things shall be submitted:
+(a) identifying the electronic record containing the statement and describing the manner in which it was produced;
+(b) giving such particulars of any device involved in the production of that electronic record as may be appropriate;
+(c) signed by a person in charge of the computer or device, or the manager of the relevant system or lawful authority.
+
+CHAPTER VII: OF THE BURDEN OF PROOF
+
+Section 104. Burden of proof.
+Whoever desires any Court to give judgment as to any legal right or liability dependent on the existence of facts which he asserts, must prove that those facts exist. When a person is bound to prove the existence of any fact, it is said that the burden of proof lies on that person.
+
+Section 105. On whom burden of proof lies.
+The burden of proof in a suit or proceeding lies on that person who would fail if no evidence at all were given on either side.
+
+Section 108. Burden of proving that case of accused comes within exceptions.
+When a person is accused of any offence, the burden of proving the existence of circumstances bringing the case within any of the General Exceptions in the Bharatiya Nyaya Sanhita, 2023, is upon him, and the Court shall presume the absence of such circumstances.

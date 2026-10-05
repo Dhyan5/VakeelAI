@@ -1,0 +1,34 @@
+LANDMARK AND CONSTITUTIONAL SUPREME COURT OF INDIA PRECEDENTS
+
+1. Kesavananda Bharati v. State of Kerala (1973) 4 SCC 225
+Principle: Basic Structure Doctrine.
+Held: Parliament's constituent power under Article 368 to amend the Constitution of India is plenary but not unlimited. Parliament cannot alter, damage, or emasculate the basic structure or fundamental framework of the Constitution, which includes supremacy of the Constitution, republican and democratic form of government, secular character, separation of powers, and judicial review.
+
+2. Maneka Gandhi v. Union of India (1978) 1 SCC 248
+Principle: Procedure Established by Law under Article 21 must be Just, Fair, and Reasonable.
+Held: The expression "personal liberty" in Article 21 is of the widest amplitude and covers a variety of rights which go to constitute the personal liberty of man. The procedure contemplated by Article 21 must be right, just, and fair and not arbitrary, fanciful, or oppressive. It intertwined Articles 14, 19, and 21 into a golden triangle.
+
+3. D.K. Basu v. State of West Bengal (1997) 1 SCC 416
+Principle: Mandatory Guidelines for Arrest and Custodial Violence Prevention.
+Held: Laid down 11 mandatory guidelines to be followed in all cases of arrest or detention:
+(1) Police personnel carrying out the arrest and handling the interrogation must bear accurate, visible, and clear identification and name tags with their designations.
+(2) A memo of arrest must be prepared at the time of arrest and attested by at least one witness (family member or respectable person of locality).
+(3) The person arrested is entitled to have one friend or relative informed of his arrest and location within 8 to 12 hours.
+(4) Right to medical examination upon request and every 48 hours during detention.
+(5) Copies of all documents to be sent to the local Magistrate.
+
+4. Arnesh Kumar v. State of Bihar (2014) 8 SCC 273
+Principle: Curbing Automatic Arrests in Offences Punishable with 7 Years or Less (Section 41/41A CrPC, now Section 35 BNSS).
+Held: Police officers cannot automatically arrest the accused when a case under Section 498A IPC or other offences punishable with imprisonment up to seven years is registered. Police must satisfy themselves about the necessity of arrest based on parameters in Section 41 CrPC and provide reasons in writing to the Magistrate. Notice of appearance under Section 41A must be served within two weeks of complaint.
+
+5. Justice K.S. Puttaswamy (Retd.) v. Union of India (2017) 10 SCC 1
+Principle: Fundamental Right to Privacy.
+Held: A nine-judge Constitution Bench unanimously affirmed that the right to privacy is a fundamental right protected under Article 21 and Part III of the Constitution. Privacy includes spatial privacy, informational privacy, and privacy of choice. Any restriction must satisfy the triple test: legality (sanction of law), legitimate state aim, and proportionality.
+
+6. Lalita Kumari v. Government of Uttar Pradesh (2014) 2 SCC 1
+Principle: Mandatory Registration of FIR under Section 154 CrPC (now Section 173 BNSS).
+Held: Registration of an FIR is mandatory under Section 154 of the Code of Criminal Procedure if the information discloses the commission of a cognizable offence. No preliminary inquiry is permissible in such cases. Preliminary inquiry is only permissible in limited categories like matrimonial disputes, medical negligence, corruption cases, and abnormal delay.
+
+7. Navtej Singh Johar v. Union of India (2018) 10 SCC 1
+Principle: Decriminalization of Consensual Homosexual Acts (Section 377 IPC).
+Held: Decriminalized consensual sexual conduct between adults in private, holding Section 377 IPC unconstitutional to the extent it applied to consensual sexual acts of adults. Reaffirmed constitutional morality over public morality.

@@ -1,0 +1,50 @@
+THE INDIAN CONTRACT ACT, 1872
+(Act No. 9 of 1872)
+
+Section 10. What agreements are contracts.
+All agreements are contracts if they are made by the free consent of parties competent to contract, for a lawful consideration and with a lawful object, and are not hereby expressly declared to be void.
+
+Section 73. Compensation for loss or damage caused by breach of contract.
+When a contract has been broken, the party who suffers by such breach is entitled to receive, from the party who has broken the contract, compensation for any loss or damage caused to him thereby, which naturally arose in the usual course of things from such breach, or which the parties knew, when they made the contract, to be likely to result from the breach of it. Such compensation is not to be given for any remote and indirect loss or damage sustained by reason of the breach.
+
+Section 74. Compensation for breach of contract where penalty stipulated for.
+When a contract has been broken, if a sum is named in the contract as the amount to be paid in case of such breach, or if the contract contains any other stipulation by way of penalty, the party complaining of the breach is entitled, whether or not actual damage or loss is proved to have been caused thereby, to receive from the party who has broken the contract reasonable compensation not exceeding the amount so named or, as the case may be, the penalty stipulated for.
+
+THE LIMITATION ACT, 1963
+(Act No. 36 of 1963)
+
+Section 3. Bar of limitation.
+Subject to the provisions contained in sections 4 to 24 (inclusive), every suit instituted, appeal preferred, and application made after the prescribed period shall be dismissed, although limitation has not been set up as a defence.
+
+Section 5. Extension of prescribed period in certain cases (Condonation of Delay).
+Any appeal or any application, other than an application under any of the provisions of Order XXI of the Code of Civil Procedure, 1908, may be admitted after the prescribed period if the appellant or the applicant satisfies the court that he had sufficient cause for not preferring the appeal or making the application within such period.
+
+Schedule Limitation Periods:
+- Suit for recovery of money, breach of contract, promissory notes: 3 years.
+- Suit for possession of immovable property based on title: 12 years.
+- Appeal to High Court from death sentence: 30 days.
+- Appeal to High Court from any other sentence: 60 days.
+- Appeal to Sessions Court: 30 days.
+
+THE CONSUMER PROTECTION ACT, 2019
+(Act No. 35 of 2019)
+
+Section 2(7). "Consumer" defined.
+Any person who buys any goods for a consideration or hires or avails of any service for a consideration, but does not include a person who obtains goods or services for commercial purposes (except earning livelihood by self-employment).
+
+Section 2(11). "Deficiency" defined.
+Any fault, imperfection, shortcoming or inadequacy in the quality, nature and manner of performance which is required to be maintained by or under any law for the time being in force or has been undertaken to be performed by a person in pursuance of a contract or otherwise in relation to any service.
+
+Pecuniary Jurisdictions of Consumer Commissions:
+- District Commission: Claims up to 50 Lakh rupees.
+- State Commission: Claims exceeding 50 Lakh rupees up to 2 Crore rupees.
+- National Commission (NCDRC): Claims exceeding 2 Crore rupees.
+
+THE ARBITRATION AND CONCILIATION ACT, 1996
+(Act No. 26 of 1996)
+
+Section 9. Interim measures, etc., by Court.
+A party may, before or during arbitral proceedings or at any time after the making of the arbitral award but before it is enforced in accordance with section 36, apply to a court for interim measures of protection in respect of preserving goods, securing amounts in dispute, or interim injunctions.
+
+Section 34. Application for setting aside arbitral award.
+Recourse to a Court against an arbitral award may be made only by an application for setting aside such award in accordance with sub-section (2) and sub-section (3), on grounds such as incapacity of parties, invalid arbitration agreement, lack of proper notice, or award in conflict with the public policy of India.

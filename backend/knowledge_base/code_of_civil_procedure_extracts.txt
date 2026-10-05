@@ -1,0 +1,30 @@
+THE CODE OF CIVIL PROCEDURE, 1908
+(Act No. 5 of 1908)
+
+PART I: SUITS IN GENERAL
+
+Section 9. Courts to try all civil suits unless barred.
+The Courts shall (subject to the provisions herein contained) have jurisdiction to try all suits of a civil nature excepting suits of which their cognizance is either expressly or impliedly barred.
+
+Section 10. Stay of suit (Res Sub-Judice).
+No Court shall proceed with the trial of any suit in which the matter in issue is also directly and substantially in issue in a previously instituted suit between the same parties, or between parties under whom they or any of them claim litigating under the same title where such suit is pending in the same or any other Court in India having jurisdiction to grant the relief claimed.
+
+Section 11. Res judicata.
+No Court shall try any suit or issue in which the matter directly and substantially in issue has been directly and substantially in issue in a former suit between the same parties, or between parties under whom they or any of them claim, litigating under the same title, in a Court competent to try such subsequent suit or the suit in which such issue has been subsequently raised, and has been heard and finally decided by such Court.
+
+Section 151. Saving of inherent powers of Court.
+Nothing in this Code shall be deemed to limit or otherwise affect the inherent power of the Court to make such orders as may be necessary for the ends of justice or to prevent abuse of the process of the Court.
+
+SCHEDULE I: ORDERS AND RULES
+
+Order VIII Rule 1. Written Statement.
+The Defendant shall, within thirty days from the date of service of summons on him, present a written statement of his defence:
+Provided that where the defendant fails to file the written statement within the said period of thirty days, he shall be allowed to file the same on such other day, as may be specified by the Court, for reasons to be recorded in writing, but which shall not be later than ninety days from the date of service of summons.
+(In Commercial Courts, extendable up to 120 days on payment of costs).
+
+Order XXXIX Rule 1 & 2. Temporary injunctions and interlocutory orders.
+Where in any suit it is proved by affidavit or otherwise—
+(a) that any property in dispute in a suit is in danger of being wasted, damaged or alienated by any party to the suit, or wrongfully sold in execution of a decree; or
+(b) that the defendant threatens, or intends, to remove or dispose of his property with a view to defrauding his creditors;
+the Court may by order grant a temporary injunction to restrain such act, or make such other order for the purpose of staying and preventing the wasting, damaging, alienation, sale, removal or disposition of the property.
+The three essential ingredients are: (1) Prima facie case, (2) Balance of convenience, (3) Irreparable injury.
