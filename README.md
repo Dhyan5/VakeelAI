@@ -1,4 +1,4 @@
-# Nyaya – Indian Legal AI Assistant
+# VakeelAI – Indian Legal AI Assistant
 
 **Nyaya** is a RAG-based AI legal research assistant that answers questions about Indian law, strictly grounded in a knowledge base you upload. Bring your own API key, upload legal documents, and get accurate, cited answers.
 
